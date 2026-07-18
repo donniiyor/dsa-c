@@ -3,9 +3,9 @@
 #include <stddef.h>
 
 typedef struct {
-  size_t count;
-  size_t capacity;
-  void **data;
+    size_t count;
+    size_t capacity;
+    void **data;
 } Stack;
 
 void stack_free(Stack *stack);
