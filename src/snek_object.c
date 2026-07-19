@@ -5,6 +5,52 @@
 #include <stdlib.h>
 #include <string.h>
 
+void refcount_free(snek_object_t *obj);
+
+snek_object_t *_new_snek_object() {
+    snek_object_t *obj = calloc(1, sizeof(snek_object_t));
+    if (obj == NULL) return NULL;
+
+    obj->refcount = 1;
+
+    return obj;
+}
+
+void refcount_inc(snek_object_t *obj) {
+    if (obj == NULL) return;
+
+    obj->refcount++;
+}
+
+void refcount_dec(snek_object_t *obj) {
+    if (obj == NULL) return;
+
+    obj->refcount--;
+
+    if (obj->refcount == 0) refcount_free(obj);
+}
+
+void refcount_free(snek_object_t *obj) {
+    if (obj->kind == INTEGER || obj->kind == FLOAT) {
+        free(obj);
+        return;
+    }
+
+    if (obj->kind == STRING) {
+        free(obj->data.v_string);
+        free(obj);
+        return;
+    }
+
+    if (obj->kind == VECTOR3) {
+        refcount_dec(obj->data.v_vector3.x);
+        refcount_dec(obj->data.v_vector3.y);
+        refcount_dec(obj->data.v_vector3.z);
+    }
+
+    free(obj);
+}
+
 snek_object_t *new_snek_integer(int value) {
     snek_object_t *obj = malloc(sizeof(snek_object_t));
     if (obj == NULL) return NULL;
@@ -53,6 +99,10 @@ snek_object_t *new_snek_vector3(snek_object_t *x, snek_object_t *y, snek_object_
 
     obj->kind = VECTOR3;
     obj->data.v_vector3 = (snek_vector_t){x, y, z};
+
+    refcount_inc(obj->data.v_vector3.x);
+    refcount_inc(obj->data.v_vector3.y);
+    refcount_inc(obj->data.v_vector3.z);
 
     return obj;
 }
@@ -158,40 +208,4 @@ snek_object_t *snek_add(snek_object_t *a, snek_object_t *b) {
     }
 
     return NULL;
-}
-
-snek_object_t *_new_snek_object() {
-    snek_object_t *obj = calloc(1, sizeof(snek_object_t));
-    if (obj == NULL) return NULL;
-
-    obj->refcount = 1;
-
-    return obj;
-}
-
-void refcount_free(snek_object_t *obj) {
-    if (obj->kind == INTEGER || obj->kind == FLOAT) {
-        free(obj);
-        return;
-    }
-
-    if (obj->kind == STRING) {
-        free(obj->data.v_string);
-        free(obj);
-        return;
-    }
-}
-
-void refcount_inc(snek_object_t *obj) {
-    if (obj == NULL) return;
-
-    obj->refcount++;
-}
-
-void refcount_dec(snek_object_t *obj) {
-    if (obj == NULL) return;
-
-    obj->refcount--;
-
-    if (obj->refcount == 0) refcount_free(obj);
 }
