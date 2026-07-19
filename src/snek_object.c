@@ -80,3 +80,10 @@ bool snek_array_set(snek_object_t *array, size_t index, snek_object_t *value) {
 
     return true;
 }
+
+snek_object_t *snek_array_get(snek_object_t *array, size_t index) {
+    if (array == NULL || array->kind != ARRAY || index >= array->data.v_array.size) return NULL;
+
+    return array->data.v_array.elements[index];
+}
+
