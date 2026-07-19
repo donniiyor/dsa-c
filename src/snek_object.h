@@ -20,7 +20,7 @@ typedef union SnekObjectData {
     int v_int;
     float v_float;
     char *v_string;
-    snek_vector_t v_vecotr3;
+    snek_vector_t v_vector3;
     snek_array_t v_array;
 } snek_object_data_t;
 
@@ -38,3 +38,4 @@ snek_object_t *new_snek_array(size_t size);
 bool snek_array_set(snek_object_t *array, size_t index, snek_object_t *value);
 snek_object_t *snek_array_get(snek_object_t *array, size_t index);
 int snek_length(snek_object_t *obj);
+snek_object_t *snek_add(snek_object_t *a, snek_object_t *b);
