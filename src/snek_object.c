@@ -1,4 +1,5 @@
 #include "snek_object.h"
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -50,6 +51,22 @@ snek_object_t *new_snek_vector3(snek_object_t *x, snek_object_t *y, snek_object_
 
     obj->kind = VECTOR3;
     obj->data.v_vecotr3 = (snek_vector_t){x, y, z};
+
+    return obj;
+}
+
+snek_object_t *new_snek_array(size_t size) {
+    snek_object_t *obj = malloc(sizeof(snek_object_t));
+    if (obj == NULL) return NULL;
+
+    snek_object_t **elements = calloc(size, sizeof(elements));
+    if (elements == NULL) {
+        free(obj);
+        return NULL;
+    }
+
+    obj->kind = ARRAY;
+    obj->data.v_array = (snek_array_t){size, elements};
 
     return obj;
 }
