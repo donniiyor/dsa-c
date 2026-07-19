@@ -1,4 +1,6 @@
 #include "snek_object.h"
+
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -69,4 +71,12 @@ snek_object_t *new_snek_array(size_t size) {
     obj->data.v_array = (snek_array_t){size, elements};
 
     return obj;
+}
+
+bool snek_array_set(snek_object_t *array, size_t index, snek_object_t *value) {
+    if (array == NULL || value == NULL || array->kind != ARRAY || index >= array->data.v_array.size) return false;
+
+    array->data.v_array.elements[index] = value;
+
+    return true;
 }

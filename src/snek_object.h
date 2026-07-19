@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdbool.h>
 
 typedef enum SnekObjectKind { INTEGER, FLOAT, STRING, VECTOR3, ARRAY } snek_object_kind_t;
 
@@ -33,3 +34,5 @@ snek_object_t *new_snek_float(float value);
 snek_object_t *new_snek_string(char *value);
 snek_object_t *new_snek_vector3(snek_object_t *x, snek_object_t *y, snek_object_t *z);
 snek_object_t *new_snek_array(size_t size);
+
+bool snek_array_set(snek_object_t *array, size_t index, snek_object_t *value);
