@@ -27,8 +27,12 @@ snek_object_t *new_snek_string(char *value) {
     if (obj == NULL) return NULL;
 
     size_t value_len = strlen(value);
-    char *value_dest = malloc(value_len * sizeof(*value));
-    if (obj == NULL) return NULL;
+    char *value_dest = malloc(value_len * (sizeof(*value) + 1)); // strlen does not count the null terminator
+
+    if (obj == NULL) {
+        free(obj);
+        return NULL;
+    }
 
     strcpy(value_dest, value);
 
@@ -38,3 +42,14 @@ snek_object_t *new_snek_string(char *value) {
     return obj;
 }
 
+snek_object_t *new_snek_vector3(snek_object_t *x, snek_object_t *y, snek_object_t *z) {
+    if (x == NULL || y == NULL || z == NULL) return NULL;
+
+    snek_object_t *obj = malloc(sizeof(snek_object_t));
+    if (obj == NULL) return NULL;
+
+    obj->kind = VECTOR3;
+    obj->data.v_vecotr3 = (snek_vector_t){x, y, z};
+
+    return obj;
+}
