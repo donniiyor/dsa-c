@@ -159,3 +159,39 @@ snek_object_t *snek_add(snek_object_t *a, snek_object_t *b) {
 
     return NULL;
 }
+
+snek_object_t *_new_snek_object() {
+    snek_object_t *obj = calloc(1, sizeof(snek_object_t));
+    if (obj == NULL) return NULL;
+
+    obj->refcount = 1;
+
+    return obj;
+}
+
+void refcount_free(snek_object_t *obj) {
+    if (obj->kind == INTEGER || obj->kind == FLOAT) {
+        free(obj);
+        return;
+    }
+
+    if (obj->kind == STRING) {
+        free(obj->data.v_string);
+        free(obj);
+        return;
+    }
+}
+
+void refcount_inc(snek_object_t *obj) {
+    if (obj == NULL) return;
+
+    obj->refcount++;
+}
+
+void refcount_dec(snek_object_t *obj) {
+    if (obj == NULL) return;
+
+    obj->refcount--;
+
+    if (obj->refcount == 0) refcount_free(obj);
+}
