@@ -3,18 +3,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void stack_free(Stack *stack) {
-    if (stack == NULL) exit(1);
+Stack *stack_new(size_t capacity) {
+    Stack *stack = malloc(sizeof(Stack));
+    if (stack == NULL || capacity <= 0) return NULL;
 
-    free(stack->data);
-    free(stack);
+    stack->count = 0;
+    stack->capacity = capacity;
+    stack->data = malloc(capacity * sizeof(void *));
+    if (stack->data == NULL) {
+        free(stack);
+        return NULL;
+    }
+
+    return stack;
 }
 
 void *stack_pop(Stack *stack) {
     if (stack->count == 0) return NULL;
 
     stack->count--;
-    return *(stack->data + stack->count);
+
+    return stack->data[stack->count];
 }
 
 void stack_push(Stack *stack, void *obj) {
@@ -26,21 +35,28 @@ void stack_push(Stack *stack, void *obj) {
         stack->capacity = stack->capacity * 2;
     }
 
-    *(stack->data + stack->count) = obj;
+    stack->data[stack->count] = obj;
     stack->count++;
 }
 
-Stack *stack_new(size_t capacity) {
-    Stack *memory = malloc(sizeof(Stack));
-    if (memory == NULL) return NULL;
+void stack_free(Stack *stack) {
+    if (stack == NULL) return;
 
-    memory->count = 0;
-    memory->capacity = capacity;
-    memory->data = malloc(capacity * sizeof(void *));
-    if (memory->data == NULL) {
-        free(memory);
-        return NULL;
+    if (stack->data != NULL) free(stack->data);
+
+    free(stack);
+}
+
+void stack_remove_nulls(Stack *stack) {
+    size_t new_count = 0;
+
+    for (int i = 0; i < stack->count; i++) {
+        if (stack->data[i] != NULL) new_count++;
     }
 
-    return memory;
+    stack->count = new_count;
+
+    for (int i = 0; i < stack->capacity; i++) {
+        stack->data[i] = NULL;
+    }
 }

@@ -8,7 +8,10 @@ typedef struct {
     void **data;
 } Stack;
 
-void stack_free(Stack *stack);
+Stack *stack_new(size_t capacity);
+
 void *stack_pop(Stack *stack);
 void stack_push(Stack *stack, void *obj);
-Stack *stack_new(size_t capacity);
+
+void stack_free(Stack *stack);
+void stack_remove_nulls(Stack *stack);
