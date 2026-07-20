@@ -20,6 +20,8 @@ void frame_free(frame_t *frame) {
     free(frame);
 }
 
+void vm_track_object(vm_t *vm, snek_object_t *obj) { stack_push(vm->objects, obj); }
+
 vm_t *vm_new() {
     vm_t *vm = malloc(sizeof(vm_t));
     if (vm == NULL) return NULL;
