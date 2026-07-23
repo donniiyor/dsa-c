@@ -1,9 +1,10 @@
-#include "stack.h"
+#include "queue.h"
+
 #include <stdio.h>
 
 int main(void) {
-  Stack* stack = stack_new(10);
-  printf("%p\n", stack);
+    struct queue *q = queue_create();
+    printf("q size: %zu\n", queue_size(q));
 
-  return 0;
+    return 0;
 }
