@@ -29,7 +29,7 @@ void vector_destroy(struct vector *v) {
     free(v);
 }
 
-bool vector_push(struct vector *v, int value) {
+bool vector_push(struct vector *v, void *value) {
     assert(v != NULL);
 
     if (v->size == v->capacity) {
@@ -42,7 +42,7 @@ bool vector_push(struct vector *v, int value) {
     return true;
 }
 
-bool vector_pop(struct vector *v, int *value) {
+bool vector_pop(struct vector *v, void **value) {
     assert(v != NULL);
 
     if (v->size == 0) return false;
@@ -52,7 +52,7 @@ bool vector_pop(struct vector *v, int *value) {
     return true;
 }
 
-bool vector_insert(struct vector *v, size_t index, int value) {
+bool vector_insert(struct vector *v, size_t index, void *value) {
     assert(v != NULL);
 
     if (index > v->size) return false;
@@ -81,7 +81,7 @@ bool vector_erase(struct vector *v, size_t index) {
     return true;
 }
 
-bool vector_get(const struct vector *v, size_t index, int *value) {
+bool vector_get(const struct vector *v, size_t index, void **value) {
     assert(v != NULL);
 
     if (index >= v->size) return false;
@@ -91,7 +91,7 @@ bool vector_get(const struct vector *v, size_t index, int *value) {
     return true;
 }
 
-bool vector_set(const struct vector *v, size_t index, int value) {
+bool vector_set(const struct vector *v, size_t index, void *value) {
     assert(v != NULL);
 
     if (index >= v->size) return false;
@@ -116,7 +116,7 @@ size_t vector_capacity(const struct vector *v) {
 bool vector_reserve(struct vector *v, size_t capacity) {
     assert(v != NULL);
 
-    int *tmp_data = realloc(v->data, sizeof(int) * capacity);
+    void *tmp_data = realloc(v->data, sizeof(int) * capacity);
     if (tmp_data == NULL) return false;
 
     v->data = tmp_data;
