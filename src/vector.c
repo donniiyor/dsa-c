@@ -52,7 +52,36 @@ bool vector_pop(struct vector *v, int *value) {
     return true;
 }
 
-bool vector_get(const struct vector *v, uint32_t index, int *value) {
+bool vector_insert(struct vector *v, size_t index, int value) {
+    assert(v != NULL);
+
+    if (index > v->size) return false;
+
+    if (v->size == v->capacity) {
+        if (!vector_reserve(v, v->capacity * 2)) return false;
+    }
+
+    memmove(&v->data[index + 1], &v->data[index], (v->size - index) * sizeof(int));
+
+    v->data[index] = value;
+    v->size++;
+
+    return true;
+}
+
+bool vector_erase(struct vector *v, size_t index) {
+    assert(v != NULL);
+
+    if (index >= v->size) return false;
+
+    memmove(&v->data[index], &v->data[index + 1], (v->size - index - 1) * sizeof(int));
+
+    v->size--;
+
+    return true;
+}
+
+bool vector_get(const struct vector *v, size_t index, int *value) {
     assert(v != NULL);
 
     if (index >= v->size) return false;
@@ -62,7 +91,7 @@ bool vector_get(const struct vector *v, uint32_t index, int *value) {
     return true;
 }
 
-bool vector_set(const struct vector *v, uint32_t index, int value) {
+bool vector_set(const struct vector *v, size_t index, int value) {
     assert(v != NULL);
 
     if (index >= v->size) return false;
