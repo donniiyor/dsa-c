@@ -1,23 +1,41 @@
-CC = clang
+CC := clang
 
-CFLAGS = -std=c23 -Wall -Wextra -Wpedantic -g -Iinclude
-LDFLAGS =
+CFLAGS := \
+	-std=c23 \
+	-Wall \
+	-Wextra \
+	-Wpedantic \
+	-Wconversion \
+	-Wshadow \
+	-Werror \
+	-g \
+	-Iinclude
 
-TARGET = app
+SRC := $(wildcard src/*.c)
+OBJ := $(patsubst src/%.c,build/%.o,$(SRC))
 
-SRCS := $(wildcard src/*.c)
-OBJS := $(SRCS:.c=.o)
+TARGET := build/app
 
-$(TARGET): $(OBJS)
-	$(CC) $(OBJS) $(LDFLAGS) -o $@
+.PHONY: all clean run format tidy
 
-src/%.o: src/%.c
+all: $(TARGET)
+
+$(TARGET): $(OBJ)
+	@mkdir -p build
+	$(CC) $(OBJ) -o $@
+
+build/%.o: src/%.c
+	@mkdir -p build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-run: $(TARGET)
+run: all
 	./$(TARGET)
 
-clean:
-	rm -f $(OBJS) $(TARGET)
+format:
+	clang-format -i src/*.c include/*.h examples/*.c tests/*.c
 
-.PHONY: run clean
+tidy:
+	clang-tidy src/*.c -- -Iinclude
+
+clean:
+	rm -rf buildPHONY: run clean
