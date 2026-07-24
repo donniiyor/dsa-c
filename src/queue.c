@@ -34,7 +34,7 @@ void queue_destroy(struct queue *q) {
     free(q);
 }
 
-bool queue_push(struct queue *q, int value) {
+bool queue_push(struct queue *q, void *value) {
     assert(q != NULL);
 
     struct node *new_node = malloc(sizeof(struct node));
@@ -58,7 +58,7 @@ bool queue_push(struct queue *q, int value) {
     return true;
 }
 
-bool queue_pop(struct queue *q, int *value) {
+bool queue_pop(struct queue *q, void **value) {
     assert(q != NULL);
 
     if (q->size == 0) return false;
@@ -96,13 +96,13 @@ size_t queue_size(const struct queue *q) {
     return q->size;
 }
 
-int queue_front(const struct queue *q) {
+void *queue_front(const struct queue *q) {
     assert(q->size > 0);
 
     return q->head->value;
 }
 
-int queue_back(const struct queue *q) {
+void *queue_back(const struct queue *q) {
     assert(q->size > 0);
 
     return q->tail->value;

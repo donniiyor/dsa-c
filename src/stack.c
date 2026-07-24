@@ -33,7 +33,7 @@ void stack_destroy(struct stack *s) {
     free(s);
 }
 
-bool stack_push(struct stack *s, int value) {
+bool stack_push(struct stack *s, void *value) {
     assert(s != NULL);
 
     struct node *new_node = malloc(sizeof(struct node));
@@ -56,7 +56,7 @@ bool stack_push(struct stack *s, int value) {
     return true;
 }
 
-bool stack_pop(struct stack *s, int *value) {
+bool stack_pop(struct stack *s, void **value) {
     assert(s != NULL && value != NULL);
 
     if (s->size == 0) return false;
@@ -83,7 +83,7 @@ size_t stack_size(const struct stack *s) {
     return s->size;
 }
 
-int stack_top(const struct stack *s) {
+void *stack_top(const struct stack *s) {
     assert(s != NULL && s->size != 0);
 
     return s->top->value;

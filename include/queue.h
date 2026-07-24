@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 struct node {
-    int value;
+    void *value;
     struct node *next;
 };
 
@@ -18,13 +18,13 @@ struct queue {
 struct queue *queue_create(void);
 void queue_destroy(struct queue *q);
 
-bool queue_push(struct queue *q, int value);
-bool queue_pop(struct queue *q, int *value);
+bool queue_push(struct queue *q, void *value);
+bool queue_pop(struct queue *q, void **value);
 
 bool queue_is_empty(const struct queue *q);
 size_t queue_size(const struct queue *q);
 
-int queue_front(const struct queue *q);
-int queue_back(const struct queue *q);
+void *queue_front(const struct queue *q);
+void *queue_back(const struct queue *q);
 
 #endif
