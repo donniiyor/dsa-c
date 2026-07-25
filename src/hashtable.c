@@ -17,19 +17,24 @@ struct hashtable *hashtable_create(size_t capacity, size_t buckets_count) {
         return NULL;
     }
 
+    for (size_t i = 0; i < buckets_count; i++) {
+        vector_init(&ht->buckets[i], sizeof(struct pair), capacity);
+    }
+
     ht->buckets_count = buckets_count;
     ht->size = 0;
 
     return ht;
 }
 
-void hashtable_destro(struct hashtable *ht) {
+void hashtable_destroy(struct hashtable *ht) {
     assert(ht != NULL);
 
-    for (uint16_t i = 0; i < ht->buckets_count; i++) {
+    for (size_t i = 0; i < ht->buckets_count; i++) {
         vector_destroy(&ht->buckets[i]);
     }
 
+    free(ht->buckets);
     free(ht);
 }
 
@@ -48,13 +53,13 @@ bool hashtable_put(struct hashtable *ht, const char *key, const void *value) {
     assert(ht != NULL);
 
     size_t index = hash(key) % ht->buckets_count;
-    struct vector bucket = ht->buckets[index];
+    struct vector *bucket = &ht->buckets[index];
 
     int item_index = -1;
 
-    for (int i = 0; i < bucket.size; i++) {
+    for (size_t i = 0; i < bucket->size; i++) {
         struct pair p;
-        vector_get(&bucket, i, (void *)&p);
+        vector_get(bucket, i, (void *)&p);
 
         if (strcmp(p.key, key) == 0) {
             item_index = i;
@@ -62,12 +67,10 @@ bool hashtable_put(struct hashtable *ht, const char *key, const void *value) {
         }
     }
 
-    struct pair p;
-    memcpy(p.key, key, sizeof(char));
-    memcpy(p.value, value, sizeof(void *));
+    struct pair p = {.key = (char *)key, .value = (void *)value};
 
-    if (item_index == -1) vector_push(&bucket, &p);
-    else vector_set(&bucket, item_index, &p);
+    if (item_index == -1) vector_push(bucket, &p);
+    else vector_set(bucket, item_index, &p);
 
     return true;
 }

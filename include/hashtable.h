@@ -12,7 +12,7 @@ struct hashtable {
 };
 
 struct hashtable *hashtable_create(size_t capacity, size_t buckets_count);
-void hashtable_destro(struct hashtable *ht);
+void hashtable_destroy(struct hashtable *ht);
 
 bool hashtable_put(struct hashtable *ht, const char *key, const void *value);
 bool hashtable_get(const struct hashtable *ht, const char *key, void *value);

@@ -4,23 +4,33 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define VECTOR_BUFFER 16
-
-struct vector *vector_create(size_t elem_size) {
+struct vector *vector_create(size_t elem_size, size_t capacity) {
     struct vector *v = malloc(sizeof(struct vector));
     if (v == NULL) return NULL;
 
-    v->data = malloc(elem_size * VECTOR_BUFFER);
+    v->data = malloc(elem_size * capacity);
     if (v->data == NULL) {
         free(v);
         return NULL;
     }
 
-    v->size = 0;
-    v->capacity = VECTOR_BUFFER;
     v->elem_size = elem_size;
+    v->size = 0;
+    v->capacity = capacity;
 
     return v;
+}
+
+bool vector_init(struct vector *v, size_t elem_size, size_t capacity) {
+    assert(v != NULL);
+
+    struct vector *tmp = vector_create(elem_size, capacity);
+    if (tmp == NULL) return false;
+
+    *v = *tmp;
+    free(tmp);
+
+    return true;
 }
 
 void vector_destroy(struct vector *v) {

@@ -9,7 +9,8 @@ struct vector {
     size_t capacity;
 };
 
-struct vector *vector_create(size_t elem_size);
+struct vector *vector_create(size_t elem_size, size_t capacity);
+bool vector_init(struct vector *v, size_t elem_size, size_t capacity);
 void vector_destroy(struct vector *v);
 
 bool vector_push(struct vector *v, const void *value);
