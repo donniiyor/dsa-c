@@ -21,12 +21,14 @@ static void test_vector_init(void) {
     assert(v.capacity == 10);
     assert(v.size == 0);
     assert(v.elem_size == sizeof(char));
+
+    vector_destroy(&v);
 }
 
-static void test_vector_destroy(void) {
+static void test_vector_free(void) {
     struct vector *v = vector_create(sizeof(char), 10);
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 static void test_vector_push(void) {
@@ -48,7 +50,7 @@ static void test_vector_push(void) {
     assert(vector_get(v, 1, &value));
     assert(value == 20);
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 static void test_vector_pop(void) {
@@ -71,7 +73,7 @@ static void test_vector_pop(void) {
 
     assert(!vector_pop(v, &value));
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 static void test_vector_insert(void) {
@@ -100,7 +102,7 @@ static void test_vector_insert(void) {
 
     assert(!vector_insert(v, 5, &x));
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 static void test_vector_erase(void) {
@@ -123,7 +125,7 @@ static void test_vector_erase(void) {
 
     assert(!vector_erase(v, 2));
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 static bool int_cmp(const void *a, const void *b) {
@@ -146,7 +148,7 @@ static void test_vector_find(void) {
     int x = 40;
     assert(!vector_find(v, &x, int_cmp, &index));
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 static void test_vector_get(void) {
@@ -162,7 +164,7 @@ static void test_vector_get(void) {
 
     assert(!vector_get(v, 1, &value));
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 static void test_vector_set(void) {
@@ -181,7 +183,7 @@ static void test_vector_set(void) {
 
     assert(!vector_set(v, 1, &b));
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 static void test_vector_size(void) {
@@ -200,7 +202,7 @@ static void test_vector_size(void) {
     vector_pop(v, NULL);
     assert(vector_size(v) == 1);
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 static void test_vector_capacity(void) {
@@ -208,7 +210,7 @@ static void test_vector_capacity(void) {
 
     assert(vector_capacity(v) == 4);
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 static void test_vector_reserve(void) {
@@ -230,7 +232,7 @@ static void test_vector_reserve(void) {
     assert(vector_get(v, 1, &value));
     assert(value == 20);
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 static void test_vector_clear(void) {
@@ -252,7 +254,7 @@ static void test_vector_clear(void) {
     vector_push(v, &a);
     assert(vector_size(v) == 1);
 
-    vector_destroy(v);
+    vector_free(v);
 }
 
 int main(void) {

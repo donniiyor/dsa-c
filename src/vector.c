@@ -4,6 +4,27 @@
 #include <stdlib.h>
 #include <string.h>
 
+bool vector_init(struct vector *v, size_t elem_size, size_t capacity) {
+    assert(v != NULL);
+
+    struct vector *tmp = vector_create(elem_size, capacity);
+    if (tmp == NULL) return false;
+
+    *v = *tmp;
+    free(tmp);
+
+    return true;
+}
+
+void vector_destroy(struct vector *v) {
+    assert(v != NULL);
+
+    free(v->data);
+    v->data = NULL;
+    v->size = 0;
+    v->capacity = 0;
+}
+
 struct vector *vector_create(size_t elem_size, size_t capacity) {
     struct vector *v = malloc(sizeof(struct vector));
     if (v == NULL) return NULL;
@@ -21,22 +42,10 @@ struct vector *vector_create(size_t elem_size, size_t capacity) {
     return v;
 }
 
-bool vector_init(struct vector *v, size_t elem_size, size_t capacity) {
+void vector_free(struct vector *v) {
     assert(v != NULL);
 
-    struct vector *tmp = vector_create(elem_size, capacity);
-    if (tmp == NULL) return false;
-
-    *v = *tmp;
-    free(tmp);
-
-    return true;
-}
-
-void vector_destroy(struct vector *v) {
-    assert(v != NULL);
-
-    free(v->data);
+    vector_destroy(v);
     free(v);
 }
 

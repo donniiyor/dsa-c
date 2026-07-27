@@ -1,3 +1,6 @@
+#ifndef VECTOR_H
+#define VECTOR_H
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -9,9 +12,11 @@ struct vector {
     size_t capacity;
 };
 
-struct vector *vector_create(size_t elem_size, size_t capacity);
 bool vector_init(struct vector *v, size_t elem_size, size_t capacity);
 void vector_destroy(struct vector *v);
+
+struct vector *vector_create(size_t elem_size, size_t capacity);
+void vector_free(struct vector *v);
 
 bool vector_push(struct vector *v, const void *value);
 bool vector_pop(struct vector *v, void *value);
@@ -29,3 +34,5 @@ size_t vector_capacity(const struct vector *v);
 
 bool vector_reserve(struct vector *v, size_t capacity);
 void vector_clear(struct vector *v);
+
+#endif
