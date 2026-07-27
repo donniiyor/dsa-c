@@ -106,7 +106,7 @@ static void test_hashtable_many_elements(void) {
     hashtable_destroy(ht);
 }
 
-static void test_remove_from_collision_chain(void) {
+static void test_hashtable_remove_from_collision_chain(void) {
     struct hashtable *ht = hashtable_create(16, 1);
 
     int a = 1;
@@ -151,6 +151,9 @@ int main(void) {
 
     puts("test_hashtable_many_elements");
     test_hashtable_many_elements();
+
+    puts("test_hashtable_remove_from_collision_chain");
+    test_hashtable_remove_from_collision_chain();
 
     puts("Hashtable tests passed");
 

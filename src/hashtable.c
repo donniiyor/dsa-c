@@ -110,7 +110,11 @@ bool hashtable_remove(struct hashtable *ht, const char *key) {
     size_t elem_index;
     if (!vector_find(bucket, key, hashtable_pair_cmp, &elem_index)) return false;
 
-    return vector_erase(bucket, elem_index);
+    if (!vector_erase(bucket, elem_index)) return false;
+
+    ht->size--;
+
+    return true;
 }
 
 size_t hashtable_size(struct hashtable *ht) {
