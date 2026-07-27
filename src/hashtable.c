@@ -49,7 +49,7 @@ static uint64_t hash(const char *s) {
     return h;
 }
 
-bool hashtable_put(struct hashtable *ht, const char *key, const void *value) {
+bool hashtable_put(struct hashtable *ht, const char *key, const void *value, const size_t value_size) {
     assert(ht != NULL);
 
     size_t index = hash(key) % ht->buckets_count;
@@ -67,7 +67,7 @@ bool hashtable_put(struct hashtable *ht, const char *key, const void *value) {
         }
     }
 
-    struct pair p = {.key = (char *)key, .value = (void *)value};
+    struct pair p = {.key = (char *)key, .value = (void *)value, .value_size = value_size};
 
     if (item_index == -1) {
         vector_push(bucket, &p);
@@ -96,9 +96,21 @@ bool hashtable_get(const struct hashtable *ht, const char *key, void *value) {
     struct pair elem;
     if (!vector_get(bucket, elem_index, &elem)) return false;
 
-    memcpy(value, elem.value, sizeof(elem.value));
+    memcpy(value, elem.value, elem.value_size);
 
     return true;
+}
+
+bool hashtable_remove(struct hashtable *ht, const char *key) {
+    assert(ht != NULL);
+
+    size_t bucket_index = hash(key) % ht->buckets_count;
+    struct vector *bucket = &ht->buckets[bucket_index];
+
+    size_t elem_index;
+    if (!vector_find(bucket, key, hashtable_pair_cmp, &elem_index)) return false;
+
+    return vector_erase(bucket, elem_index);
 }
 
 size_t hashtable_size(struct hashtable *ht) {
