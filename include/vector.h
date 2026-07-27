@@ -19,6 +19,8 @@ bool vector_pop(struct vector *v, void *value);
 bool vector_insert(struct vector *v, size_t index, const void *value);
 bool vector_erase(struct vector *v, size_t index);
 
+typedef bool (*vector_value_cmp)(const void *a, const void *b);
+bool vector_find(const struct vector *v, const void *value, vector_value_cmp cmp, size_t *index);
 bool vector_get(const struct vector *v, size_t index, void *value);
 bool vector_set(struct vector *v, size_t index, const void *value);
 

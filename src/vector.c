@@ -100,6 +100,24 @@ bool vector_erase(struct vector *v, size_t index) {
     return true;
 }
 
+bool vector_find(const struct vector *v, const void *value, vector_value_cmp cmp, size_t *index) {
+    assert(v != NULL && cmp != NULL);
+
+    const char *base = v->data;
+
+    for (size_t i = 0; i < v->size; i++) {
+        const void *elem = base + i * v->elem_size;
+
+        if (cmp(elem, value)) {
+            *index = i;
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool vector_get(const struct vector *v, size_t index, void *value) {
     assert(v != NULL);
 
