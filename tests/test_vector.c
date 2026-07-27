@@ -294,7 +294,7 @@ int main(void) {
     puts("test_vector_clear");
     test_vector_clear();
 
-    puts("All tests passed.");
+    puts("Vector tests passed.");
 
     return 0;
 }

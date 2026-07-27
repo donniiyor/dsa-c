@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct hashtable *hashtable_create(size_t capacity, size_t buckets_count) {
+struct hashtable *hashtable_create(size_t bucket_capacity, size_t buckets_count) {
     struct hashtable *ht = malloc(sizeof(struct hashtable));
     if (ht == NULL) return NULL;
 
@@ -18,7 +18,7 @@ struct hashtable *hashtable_create(size_t capacity, size_t buckets_count) {
     }
 
     for (size_t i = 0; i < buckets_count; i++) {
-        vector_init(&ht->buckets[i], sizeof(struct pair), capacity);
+        vector_init(&ht->buckets[i], sizeof(struct pair), bucket_capacity);
     }
 
     ht->buckets_count = buckets_count;
@@ -69,8 +69,40 @@ bool hashtable_put(struct hashtable *ht, const char *key, const void *value) {
 
     struct pair p = {.key = (char *)key, .value = (void *)value};
 
-    if (item_index == -1) vector_push(bucket, &p);
-    else vector_set(bucket, item_index, &p);
+    if (item_index == -1) {
+        vector_push(bucket, &p);
+        ht->size++;
+    } else vector_set(bucket, item_index, &p);
 
     return true;
+}
+
+static bool hashtable_pair_cmp(const void *elem, const void *value) {
+    const struct pair *pair = elem;
+    const char *key = value;
+
+    return strcmp(pair->key, key) == 0;
+}
+
+bool hashtable_get(const struct hashtable *ht, const char *key, void *value) {
+    assert(ht != NULL);
+
+    size_t bucket_index = hash(key) % ht->buckets_count;
+    struct vector *bucket = &ht->buckets[bucket_index];
+
+    size_t elem_index;
+    if (!vector_find(bucket, key, hashtable_pair_cmp, &elem_index)) return false;
+
+    struct pair elem;
+    if (!vector_get(bucket, elem_index, &elem)) return false;
+
+    memcpy(value, elem.value, sizeof(elem.value));
+
+    return true;
+}
+
+size_t hashtable_size(struct hashtable *ht) {
+    assert(ht != NULL);
+
+    return ht->size;
 }
