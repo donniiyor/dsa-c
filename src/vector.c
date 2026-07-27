@@ -56,13 +56,13 @@ bool vector_push(struct vector *v, const void *value) {
 }
 
 bool vector_pop(struct vector *v, void *value) {
-    assert(v != NULL && value != NULL);
+    assert(v != NULL);
 
     if (v->size == 0) return false;
 
     v->size--;
 
-    memcpy(value, (char *)v->data + v->size * v->elem_size, v->elem_size);
+    if (value != NULL) memcpy(value, (char *)v->data + v->size * v->elem_size, v->elem_size);
 
     return true;
 }
